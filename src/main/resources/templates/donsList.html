@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        .below-threshold {
+            color: red;
+        }
+        .above-threshold {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Reservations</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">TITRE</th>
+            <th scope="col">MONTANT</th>
+            <th scope="col">TYPE</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="don : ${dons}">
+            <td th:text="${don.id}"></td>
+            <td th:text="${don.titre}"></td>
+            <td th:text="${don.montant}"></td>
+            <td th:text="${don.type}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h3 id="total" class="below-threshold">Total: </h3>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("tbody tr");
+        let total = 0;
+        const threshold = 1000;
+
+        rows.forEach(row => {
+            const montantCell = row.cells[2];
+            const montant = parseFloat(montantCell.textContent.trim());
+            if (!isNaN(montant)) {
+                total += montant;
+            }
+        });
+
+        const totalElement = document.getElementById("total");
+        totalElement.textContent = `Total: ${total} `;
+
+        // Appliquez une classe en fonction de la valeur seuil
+        if (total < threshold) {
+            totalElement.classList.remove("above-threshold");
+            totalElement.classList.add("below-threshold");
+        } else {
+            totalElement.classList.remove("below-threshold");
+            totalElement.classList.add("above-threshold");
+        }
+    });
+</script>
+</body>
+</html>
